@@ -91,6 +91,11 @@ dependencies {
 //    implementation "androidx.hilt:hilt-lifecycle-viewmodel:$hilt_lifecycle" //dependency
     kapt "androidx.hilt:hilt-compiler:$hilt_lifecycle" //for annotation
 
+    //Hilt Navigation to build ONLY compose
+    def hilt_navigation = "1.0.0"
+    implementation "androidx.hilt:hilt-navigation-compose:$hilt_navigation"
+
+
     //Glide
     def glide_version = "4.16.0"
     implementation "com.github.bumptech.glide:glide:$glide_version"
