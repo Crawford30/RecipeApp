@@ -1,6 +1,6 @@
 package com.example.food2forkmvvm.network.responses
 
-import com.example.mvvmrecipeapp.network.model.RecipeNetworkDTO
+import com.example.food2forkmvvm.network.model.RecipeNetworkDTO
 import com.google.gson.annotations.SerializedName
 
 /**

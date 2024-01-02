@@ -1,7 +1,7 @@
 package com.example.food2forkmvvm.network
 
-import com.example.mvvmrecipeapp.network.model.RecipeNetworkDTO
-import com.example.mvvmrecipeapp.network.responses.RecipeSearchResponse
+import com.example.food2forkmvvm.network.model.RecipeNetworkDTO
+import com.example.food2forkmvvm.network.responses.RecipeSearchResponse
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Query
