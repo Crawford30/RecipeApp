@@ -19,7 +19,7 @@ const val STATE_KEY_RECIPE = "recipe.state.recipe.key"
 
 
 @HiltViewModel
-class RecipeViewModel
+class RecipeDetailViewModel
 @Inject
 constructor(
     private val recipeRepository: RecipeRepository,

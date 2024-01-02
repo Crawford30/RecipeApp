@@ -14,10 +14,9 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.food2forkmvvm.presentation.navigation.Screen
 import com.example.food2forkmvvm.presentation.ui.recipe.RecipeDetailScreen
-import com.example.food2forkmvvm.presentation.ui.recipe.RecipeViewModel
+import com.example.food2forkmvvm.presentation.ui.recipe.RecipeDetailViewModel
 import com.example.food2forkmvvm.presentation.ui.recipe_list.RecipeListScreen
 import com.example.food2forkmvvm.presentation.ui.recipe_list.RecipeListViewModel
-import com.example.food2forkmvvm.ui.theme.AppTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -77,7 +76,7 @@ class MainActivity : ComponentActivity() {
                     val viewModelStoreOwner = checkNotNull(LocalViewModelStoreOwner.current)
 
                     //This view model is scope to this composable
-                    val viewModel: RecipeViewModel =
+                    val viewModel: RecipeDetailViewModel =
                         viewModel(
                             viewModelStoreOwner,
                             "RecipeDetailViewModel",
