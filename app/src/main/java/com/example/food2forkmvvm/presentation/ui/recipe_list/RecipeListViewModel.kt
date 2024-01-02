@@ -29,12 +29,12 @@ const val STATE_KEY_SELECTED_CATEGORY = "recipe.state.query.selected_category"
  * RecipeList viewmodel
  */
 @HiltViewModel
-class RecipeListViewModel @Inject constructor(
+class RecipeListViewModel
+@Inject
+constructor(
     private val repository: RecipeRepository,
-    @Named("auth_token") private val token: String,
-//    @Assisted private val savedStateHandle: SavedStateHandle
-    private val savedStateHandle: SavedStateHandle
-
+    private @Named("auth_token") val token: String,
+    private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
     /**

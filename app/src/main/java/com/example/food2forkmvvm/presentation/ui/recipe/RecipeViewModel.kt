@@ -17,23 +17,26 @@ import javax.inject.Named
 
 const val STATE_KEY_RECIPE = "recipe.state.recipe.key"
 
+
 @HiltViewModel
-class RecipeViewModel @Inject constructor(
+class RecipeViewModel
+@Inject
+constructor(
     private val recipeRepository: RecipeRepository,
-    @Named("auth_token") private val token: String,
-    private val savedStateHandle: SavedStateHandle
-) : ViewModel() {
+    private @Named("auth_token") val token: String,
+    private val state: SavedStateHandle,
+): ViewModel(){
 
     val recipe: MutableState<Recipe?> = mutableStateOf(null)
 
     val loading = mutableStateOf(false)
 
-    init {
-        // restore if the process dies
-        savedStateHandle.get<Int>(STATE_KEY_RECIPE)?.let { recipeId ->
-            onTriggerEvent(RecipeEvent.GetRecipeEvent(recipeId))
-        }
-    }
+//    init {
+//        // restore if the process dies
+//        savedStateHandle.get<Int>(STATE_KEY_RECIPE)?.let { recipeId ->
+//            onTriggerEvent(RecipeEvent.GetRecipeEvent(recipeId))
+//        }
+//    }
 
     fun onTriggerEvent(event: RecipeEvent) {
         viewModelScope.launch {
@@ -66,7 +69,7 @@ class RecipeViewModel @Inject constructor(
 
 
         //Update the save state handle
-        savedStateHandle.set(STATE_KEY_RECIPE, recipe.id)
+//        savedStateHandle.set(STATE_KEY_RECIPE, recipe.id)
 
         loading.value = false
     }

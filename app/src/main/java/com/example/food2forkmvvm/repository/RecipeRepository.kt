@@ -1,6 +1,7 @@
 package com.example.food2forkmvvm.repository
 
 import com.example.food2forkmvvm.domain.model.Recipe
+import javax.inject.Named
 
 interface RecipeRepository {
 

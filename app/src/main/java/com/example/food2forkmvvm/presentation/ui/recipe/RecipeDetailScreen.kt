@@ -16,7 +16,7 @@ import com.example.food2forkmvvm.util.Constants
 import com.example.mvvmrecipeapp.presentation.components.RecipeView
 
 @Composable
-fun Screen.RecipeDetail(
+fun RecipeDetailScreen (
     isDarkTheme: Boolean,
     recipeId: Int?,
     viewModel: RecipeViewModel
