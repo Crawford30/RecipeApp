@@ -111,9 +111,7 @@ fun RecipeListScreen(
                 onChangeScrollPosition = viewModel::onChangeRecipeScrollPosition ,
                 page = page ,
                 onTriggerNextPage = { viewModel.onTriggerEvent(RecipeListEvent.NextPageEvent)  },
-                onNavigateToRecipeDetailScreen = {
-                    onNavigateToRecipeDetailScreen
-                }
+                onNavigateToRecipeDetailScreen =  onNavigateToRecipeDetailScreen
             )
 
 
