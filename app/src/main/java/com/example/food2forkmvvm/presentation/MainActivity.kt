@@ -1,4 +1,4 @@
-package com.example.food2forkmvvm
+package com.example.food2forkmvvm.presentation
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
