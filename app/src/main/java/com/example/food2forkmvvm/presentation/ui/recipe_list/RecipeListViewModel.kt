@@ -180,6 +180,8 @@ constructor(
             query = query.value
         )
 
+        Log.d(TAG, "result Load:: ${result}")
+
         /**
          *Set the value
          */

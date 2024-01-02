@@ -42,7 +42,7 @@ fun RecipeList(
             LoadingRecipeListShimmer(imageHeight = 250.dp,)
         }
         else if(recipes.isEmpty()){
-//            NothingHere()
+           NothingHere()
         }
         else {
             LazyColumn{

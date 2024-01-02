@@ -9,6 +9,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -19,6 +20,7 @@ import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
 import com.example.food2forkmvvm.domain.model.Recipe
 import com.example.food2forkmvvm.R
+import com.example.food2forkmvvm.util.DEFAULT_RECIPE_IMAGE
 
 import com.example.food2forkmvvm.util.loadPicture
 
@@ -48,6 +50,17 @@ fun RecipeCard(
         elevation = 8.dp,
     ) {
         Column {
+            val image = recipe?.featuredImage?.let { loadPicture(url = it, defaultImage = DEFAULT_RECIPE_IMAGE).value }
+            image?.let { img ->
+                Image(
+                    bitmap = img.asImageBitmap(),
+                    contentDescription = "Recipe Featured Image",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(225.dp),
+                    contentScale = ContentScale.Crop,
+                )
+            }
 //            CoilImage(
 //                data = recipe.featuredImage,
 //                contentDescription = recipe.title,

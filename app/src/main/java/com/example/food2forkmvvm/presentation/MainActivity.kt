@@ -3,22 +3,15 @@ package com.example.food2forkmvvm.presentation
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.ScaffoldState
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.intl.Locale
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.HiltViewModelFactory
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.food2forkmvvm.presentation.navigation.Screen
 import com.example.food2forkmvvm.presentation.ui.recipe.RecipeDetailScreen
 import com.example.food2forkmvvm.presentation.ui.recipe.RecipeViewModel
@@ -43,6 +36,7 @@ class MainActivity : ComponentActivity() {
             NavHost(navController = navController, startDestination = Screen.RecipeList.route) {
 
                 //We need destination for our nav graph
+                //Recipe List
                 composable(route = Screen.RecipeList.route) { navBackStackEntry ->
                     val hiltViewModelFactory =
                         HiltViewModelFactory(context = LocalContext.current, navBackStackEntry)
@@ -56,6 +50,11 @@ class MainActivity : ComponentActivity() {
                     RecipeListScreen(
                         isDarkTheme = (application as BaseApplication).isDarkTheme.value,
                         onToggleTheme = { (application as BaseApplication)::toggleTheme },
+//                        onNavigateToRecipeDetailScreen = {
+//                            navController.navigate(it)
+//                        },
+                        onNavigateToRecipeDetailScreen = navController::navigate, //It will just infer
+
                         viewModel = viewModel
                     )
 
@@ -63,8 +62,15 @@ class MainActivity : ComponentActivity() {
                 }
 
 
-                //We need destination for our nav graph
-                composable(route = Screen.RecipeList.route) { navBackStackEntry ->
+                //Recipe Detail Screen
+                composable(
+                    route = Screen.RecipeDetail.route + "/{recipeId}",
+                    arguments = listOf(navArgument("recipeId") {
+                        //Tells the Destination whats the argument type is
+                        type = NavType.IntType
+                    })
+
+                ) { navBackStackEntry ->
                     val hiltViewModelFactory =
                         HiltViewModelFactory(context = LocalContext.current, navBackStackEntry)
                     //Instantiate the VM
@@ -80,7 +86,7 @@ class MainActivity : ComponentActivity() {
 
                     RecipeDetailScreen(
                         isDarkTheme = (application as BaseApplication).isDarkTheme.value,
-                        recipeId = 1,
+                        recipeId = navBackStackEntry.arguments?.getInt("recipeId"),
                         viewModel = viewModel
                     )
 

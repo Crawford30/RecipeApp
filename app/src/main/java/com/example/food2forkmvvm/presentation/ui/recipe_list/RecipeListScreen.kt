@@ -17,6 +17,7 @@ import com.example.food2forkmvvm.util.Constants.TAG
 fun RecipeListScreen(
     isDarkTheme: Boolean,
     onToggleTheme: () -> Unit,
+    onNavigateToRecipeDetailScreen: (String) -> Unit,
     viewModel: RecipeListViewModel
 ) {
 
@@ -110,23 +111,12 @@ fun RecipeListScreen(
                 onChangeScrollPosition = viewModel::onChangeRecipeScrollPosition ,
                 page = page ,
                 onTriggerNextPage = { viewModel.onTriggerEvent(RecipeListEvent.NextPageEvent)  },
-                onNavigateToRecipeDetailScreen = {}
+                onNavigateToRecipeDetailScreen = {
+                    onNavigateToRecipeDetailScreen
+                }
             )
 
 
-
-
-            //Call the Recipe List Composable (State Hoisting)
-//            RecipeList(
-//                isLoading = isLoading,
-//                recipes = recipes,
-//                onChangeRecipeScrollPosition = viewModel::onChangeRecipeScrollPosition,
-//                page = page,
-//                onNextPage = { viewModel.onTriggerEvent(RecipeListEvent.NextPageEvent) },
-//                navController = findNavController(),
-//                scaffoldState = scaffoldState,
-//                snackbarController = snackbarController,
-//            )
 
         }
 
