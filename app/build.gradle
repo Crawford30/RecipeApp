@@ -91,7 +91,7 @@ dependencies {
 //    implementation "androidx.hilt:hilt-lifecycle-viewmodel:$hilt_lifecycle" //dependency
     kapt "androidx.hilt:hilt-compiler:$hilt_lifecycle" //for annotation
 
-    //Hilt Navigation to build ONLY compose
+    //Hilt Navigation to build ONLY compose(Enables constructor injection into viewmodels used in composables)
     def hilt_navigation = "1.0.0"
     implementation "androidx.hilt:hilt-navigation-compose:$hilt_navigation"
 
