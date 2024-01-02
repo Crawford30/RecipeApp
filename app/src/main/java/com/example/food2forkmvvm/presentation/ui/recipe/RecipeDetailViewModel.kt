@@ -31,6 +31,8 @@ constructor(
 
     val loading = mutableStateOf(false)
 
+    val onLoad: MutableState<Boolean> = mutableStateOf(false)
+
 //    init {
 //        // restore if the process dies
 //        savedStateHandle.get<Int>(STATE_KEY_RECIPE)?.let { recipeId ->
