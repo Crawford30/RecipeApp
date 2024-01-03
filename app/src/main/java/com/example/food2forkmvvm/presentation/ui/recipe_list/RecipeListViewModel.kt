@@ -7,11 +7,11 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.food2forkmvvm.domain.model.Recipe
-import com.example.food2forkmvvm.interactors.recipe_list_screen_use_cases.SearchRecipe
+import com.example.food2forkmvvm.interactors.recipe_list_screen_use_cases.RestoreRecipes
+import com.example.food2forkmvvm.interactors.recipe_list_screen_use_cases.SearchRecipes
 import com.example.food2forkmvvm.repository.RecipeRepository
 import com.example.food2forkmvvm.util.Constants.TAG
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -33,8 +33,9 @@ const val STATE_KEY_SELECTED_CATEGORY = "recipe.state.query.selected_category"
 class RecipeListViewModel
 @Inject
 constructor(
-    private val searchRecipe: SearchRecipe,
-    private val repository: RecipeRepository,
+    private val searchRecipe: SearchRecipes,
+    private val restoreRecipes: RestoreRecipes,
+//    private val repository: RecipeRepository, //we delete the respository now
     private @Named("auth_token") val token: String,
     private val savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
@@ -143,26 +144,33 @@ constructor(
     }
 
 
-    private suspend fun restoreState() {
-        loading.value = true
-        //If the user was viewing page 1,2,3 we need to get all those and append to the list
+    private fun restoreState() {
+        //Now We call the use case
 
-        // Must retrieve each page of results.
-        val results: MutableList<Recipe> = mutableListOf()
+        /**
+         * [execute] function is emitting a flow and we need to collect the data from the flow, hence we can [onEach] function
+         */
+        restoreRecipes.execute(
+            page = page.value,
+            query = query.value
+        ).onEach { dataState ->
 
-        //In prod, we would use cache layer instead of having to query the data from api again
-        //We query from the cache
-        for (p in 1..page.value) {
-            Log.d(TAG, "restoreState: page: ${p}, query: ${query.value}")
-            val result = repository.search(token = token, page = p, query = query.value)
-            results.addAll(result)
+            //loading state
+            loading.value = dataState.loading
 
-            //If p equals to current pagination, we're done
-            if (p == page.value) { // done
-                recipes.value = results
-                loading.value = false
+            //data
+            dataState.data?.let { list ->
+                recipes.value = list
             }
-        }
+
+            //error
+            dataState.error?.let { error ->
+                Log.d(TAG, "restoreState: ${error}")
+                TODO("handle the error")
+            }
+
+        }.launchIn(viewModelScope) //This scope will live as long ad the VM is alive
+
 
     }
 
@@ -342,7 +350,6 @@ constructor(
     /**
      *This function is used to reset the search state
      */
-
     private fun resetSearchState() {
 
         recipes.value = listOf() //reset recipe list
@@ -359,11 +366,6 @@ constructor(
             clearSelectedCategory()
         }
     }
-
-
-    fun getRepo() = repository
-
-    fun getToken() = token
 
 
 }

@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.flow
 /**
  * We need to provide it will Hilt and  inject it into the VM
  */
-class SearchRecipe(
+class SearchRecipes(
     private val recipeDao: RecipeDAO,
     private val recipeService: RecipeRetrofitService,
     private val entityMapper: RecipeEntityMapper,
