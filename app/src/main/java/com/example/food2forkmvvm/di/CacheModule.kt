@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.example.food2forkmvvm.cache.RecipeDAO
 import com.example.food2forkmvvm.cache.database.RecipeDatabase
+import com.example.food2forkmvvm.cache.model.RecipeEntityMapper
 import com.example.food2forkmvvm.presentation.BaseApplication
 import dagger.Module
 import dagger.Provides
@@ -32,6 +33,12 @@ object CacheModule {
     @Provides
     fun provideRecipeDAO(app: RecipeDatabase): RecipeDAO {
         return app.recipeDAO()
+    }
+
+    @Singleton
+    @Provides
+    fun provideCacheRecipeMapper(): RecipeEntityMapper {
+        return RecipeEntityMapper()
     }
 
 
