@@ -25,7 +25,6 @@ data class DataState<out T>(
                 error = null,
                 loading = false
             )
-
         }
 
 
@@ -38,8 +37,8 @@ data class DataState<out T>(
                 loading = false, //default
                 data = null //default
             )
-
         }
+
         //When we do get loading
         fun <T> loading(): DataState<T> {
             return DataState(
