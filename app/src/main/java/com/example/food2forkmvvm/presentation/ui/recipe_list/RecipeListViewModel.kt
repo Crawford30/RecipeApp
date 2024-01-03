@@ -7,15 +7,16 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.food2forkmvvm.domain.model.Recipe
+import com.example.food2forkmvvm.interactors.recipe_list_screen_use_cases.SearchRecipe
 import com.example.food2forkmvvm.repository.RecipeRepository
 import com.example.food2forkmvvm.util.Constants.TAG
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Named
-
-
 
 
 const val PAGE_SIZE = 30
@@ -32,6 +33,7 @@ const val STATE_KEY_SELECTED_CATEGORY = "recipe.state.query.selected_category"
 class RecipeListViewModel
 @Inject
 constructor(
+    private val searchRecipe: SearchRecipe,
     private val repository: RecipeRepository,
     private @Named("auth_token") val token: String,
     private val savedStateHandle: SavedStateHandle,
@@ -167,27 +169,39 @@ constructor(
 
     //Use cases are functions inside a viewmodel
     //Use case #1
-    private suspend fun newSearch() {
-        loading.value = true //set loading to true
+    private fun newSearch() {
 
-        delay(2000)
+        Log.d(TAG, "newSearch query: ${query.value} page: ${page.value}")
 
+        //Reset Search state
         resetSearchState()
 
-        val result = repository.search(
-            token = token,
-            page = 1,
-            query = query.value
-        )
-
-        Log.d(TAG, "result Load:: ${result}")
+        //Now We call the use case
 
         /**
-         *Set the value
+         * [execute] function is emitting a flow and we need to collect the data from the flow, hence we can [onEach] function
          */
-        recipes.value = result
-        //If we get results, we reset the loading state
-        loading.value = false
+        searchRecipe.execute(
+            token = token,
+            page = page.value,
+            query = query.value
+        ).onEach { dataState ->
+
+            //loading state
+            loading.value = dataState.loading
+
+            //data
+            dataState.data?.let { list ->
+                recipes.value = list
+            }
+
+            //error
+            dataState.error?.let { error ->
+                Log.d(TAG, "newSearch: ${error}")
+                TODO("handle the error")
+            }
+
+        }.launchIn(viewModelScope) //This scope will live as long ad the VM is alive
 
 
     }
@@ -197,7 +211,7 @@ constructor(
      */
 
     //Use case #2
-    private suspend fun nextPage() {
+    private fun nextPage() {
 
         //prevent duplicate events due to recompose happening too quickly
         //If there is a query inn progress, stop getting the next page
@@ -208,23 +222,33 @@ constructor(
 
             Log.d(TAG, "nextPage: triggered:: ${page.value}")
 
-            //Just to show pagination, coz api is fast
-            delay(1000)
-
-            //It shouldnt be called when the app first launches
             if (page.value > 1) {
-                val result = repository.search(
+
+                /**
+                 * [execute] function is emitting a flow and we need to collect the data from the flow, hence we can [onEach] function
+                 */
+                searchRecipe.execute(
                     token = token,
                     page = page.value,
                     query = query.value
-                )
-                Log.d(TAG, "result: triggered:: ${result}")
+                ).onEach { dataState ->
 
-                appendRecipes(result)
+                    //loading state
+                    loading.value = dataState.loading
 
+                    //data
+                    dataState.data?.let { list ->
+                        appendRecipes(list)
+                    }
+
+                    //error
+                    dataState.error?.let { error ->
+                        Log.d(TAG, "nextPage: ${error}")
+                        TODO("handle the error")
+                    }
+
+                }.launchIn(viewModelScope) //This scope will live as long ad the VM is alive
             }
-
-            loading.value = false
 
 
         }
