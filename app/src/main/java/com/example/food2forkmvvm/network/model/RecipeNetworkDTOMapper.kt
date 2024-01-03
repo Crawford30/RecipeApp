@@ -1,6 +1,7 @@
 package com.example.food2forkmvvm.network.model
 
 import com.example.food2forkmvvm.domain.model.Recipe
+import com.example.food2forkmvvm.util.DateUtils
 import com.example.food2forkmvvm.util.DomainMapper
 
 /**
@@ -21,11 +22,9 @@ class RecipeNetworkDTOMapper : DomainMapper<RecipeNetworkDTO, Recipe> {
             rating = model.rating,
             publisher = model.publisher,
             sourceUrl = model.sourceUrl,
-            description = model.description,
-            cookingInstructions = model.cookingInstructions,
             ingredients = model.ingredients?: listOf(),
-            dateAdded = model.dateAdded,
-            dateUpdated = model.dateUpdated,
+            dateAdded = DateUtils.longToDate(model.longDateAdded),
+            dateUpdated = DateUtils.longToDate(model.longDateUpdated),
         )
     }
 
@@ -40,11 +39,9 @@ class RecipeNetworkDTOMapper : DomainMapper<RecipeNetworkDTO, Recipe> {
             rating = domainModel.rating,
             publisher = domainModel.publisher,
             sourceUrl = domainModel.sourceUrl,
-            description = domainModel.description,
-            cookingInstructions = domainModel.cookingInstructions,
             ingredients = domainModel.ingredients,
-            dateAdded = domainModel.dateAdded,
-            dateUpdated = domainModel.dateUpdated,
+            longDateAdded = DateUtils.dateToLong(domainModel.dateAdded),
+            longDateUpdated = DateUtils.dateToLong(domainModel.dateUpdated),
         )
     }
 
