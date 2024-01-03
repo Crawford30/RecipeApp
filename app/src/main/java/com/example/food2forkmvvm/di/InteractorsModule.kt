@@ -4,6 +4,7 @@ import com.example.food2forkmvvm.cache.RecipeDAO
 import com.example.food2forkmvvm.cache.model.RecipeEntityMapper
 import com.example.food2forkmvvm.interactors.recipe_list_screen_use_cases.RestoreRecipes
 import com.example.food2forkmvvm.interactors.recipe_list_screen_use_cases.SearchRecipes
+import com.example.food2forkmvvm.interactors.recipe_screen_use_cases.GetRecipe
 import com.example.food2forkmvvm.network.RecipeRetrofitService
 import com.example.food2forkmvvm.network.model.RecipeNetworkDTOMapper
 import dagger.Module
@@ -64,4 +65,27 @@ object InteractorsModule {
 
     }
 
+
+    /**
+     * Provide the get single recipe
+     */
+    @ViewModelScoped
+    @Provides
+    fun provideGetRecipe(
+        recipeService: RecipeRetrofitService,
+        recipeDAO: RecipeDAO,
+        recipeEntityMapper: RecipeEntityMapper,
+        recipeNetworkDTOMapper: RecipeNetworkDTOMapper
+    ): GetRecipe {
+        /**
+         * Usecase being provided by Hilt
+         */
+        return GetRecipe(
+            recipeService = recipeService,
+            recipeDao = recipeDAO,
+            entityMapper = recipeEntityMapper,
+            dtoMapper = recipeNetworkDTOMapper
+        )
+
+    }
 }

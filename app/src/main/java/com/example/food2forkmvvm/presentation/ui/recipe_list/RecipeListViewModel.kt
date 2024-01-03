@@ -166,7 +166,7 @@ constructor(
             //error
             dataState.error?.let { error ->
                 Log.d(TAG, "restoreState: ${error}")
-                TODO("handle the error")
+//                TODO("handle the error")
             }
 
         }.launchIn(viewModelScope) //This scope will live as long ad the VM is alive
@@ -206,7 +206,7 @@ constructor(
             //error
             dataState.error?.let { error ->
                 Log.d(TAG, "newSearch: ${error}")
-                TODO("handle the error")
+//                TODO("handle the error")
             }
 
         }.launchIn(viewModelScope) //This scope will live as long ad the VM is alive
@@ -252,7 +252,7 @@ constructor(
                     //error
                     dataState.error?.let { error ->
                         Log.d(TAG, "nextPage: ${error}")
-                        TODO("handle the error")
+//                        TODO("handle the error")
                     }
 
                 }.launchIn(viewModelScope) //This scope will live as long ad the VM is alive

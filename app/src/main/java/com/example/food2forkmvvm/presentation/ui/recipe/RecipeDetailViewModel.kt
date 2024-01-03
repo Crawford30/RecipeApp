@@ -7,10 +7,13 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.food2forkmvvm.domain.model.Recipe
+import com.example.food2forkmvvm.interactors.recipe_screen_use_cases.GetRecipe
 import com.example.food2forkmvvm.repository.RecipeRepository
 import com.example.food2forkmvvm.util.Constants.TAG
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Named
@@ -22,10 +25,11 @@ const val STATE_KEY_RECIPE = "recipe.state.recipe.key"
 class RecipeDetailViewModel
 @Inject
 constructor(
-    private val recipeRepository: RecipeRepository,
+    private val getRecipe: GetRecipe,
+//    private val recipeRepository: RecipeRepository, //we dont need the repository since we're using usecases
     private @Named("auth_token") val token: String,
     private val state: SavedStateHandle,
-): ViewModel(){
+) : ViewModel() {
 
     val recipe: MutableState<Recipe?> = mutableStateOf(null)
 
@@ -57,23 +61,25 @@ constructor(
         }
     }
 
-    private suspend fun getRecipe(id: Int) {
-        loading.value = true
+    private fun getRecipe(id: Int) {
+        getRecipe.execute(
+            recipeId = id,
+            token = token
+        ).onEach { dataState ->
+            loading.value = dataState.loading
+            dataState.data?.let { data ->
+                recipe.value = data
+                state.set(STATE_KEY_RECIPE, data.id)
 
-        // simulate a delay to show loading
-        delay(1000)
+            }
 
-        val recipe = recipeRepository.getSingleRecipe(token = token, id = id)
+            dataState.error?.let { error ->
+                Log.d(TAG, "getRicepe: ${error}")
+            }
+
+        }.launchIn(viewModelScope)
 
 
-
-        this.recipe.value = recipe
-
-
-        //Update the save state handle
-//        savedStateHandle.set(STATE_KEY_RECIPE, recipe.id)
-
-        loading.value = false
     }
 
 }
