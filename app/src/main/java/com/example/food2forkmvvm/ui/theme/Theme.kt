@@ -11,8 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.example.food2forkmvvm.presentation.components.CircularIndeterminateProgressBar
-import com.example.food2forkmvvm.presentation.components.DefaultSnackbar
+import com.example.food2forkmvvm.presentation.components.*
 
 /*
 Light Colors
@@ -87,48 +86,22 @@ fun AppTheme(
                 modifier = Modifier.align(Alignment.BottomCenter)
             )
 
+
             val isShowing = remember { mutableStateOf(true) }
-
             if (isShowing.value) {
-                AlertDialog(onDismissRequest = {
-                    isShowing.value = false
-                },
-                    title = { Text(text = "Dialog Title") },
-                    text = { Text(text = "Description") },
-
-                    buttons = {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(8.dp),
-                            horizontalArrangement = Arrangement.End
-                        ) {
-
-                            Button(
-                                modifier = Modifier.padding(8.dp),
-                                colors = ButtonDefaults.buttonColors(
-                                    backgroundColor = MaterialTheme.colors.onError
-                                ),
-                                onClick = {
-                                    isShowing.value = false
-                                }
-                            ) {
-                                Text(text = "Cancel")
-                            }
-                            
-                            Button(
-                                modifier = Modifier.padding(8.dp),
-                                onClick = {
-                                    isShowing.value = false
-                                }
-                            ) {
-                                Text(text = "Ok")
-                            }
-                        }
-                    }
-
+                GenericDialog(
+                    onDismiss = { isShowing.value = false },
+                    title = "Error",
+                    description = "Hey look a dialog description",
+                    positiveAction = PositiveAction(
+                        positiveBtnTxt = "OK",
+                        onPositiveAction = { isShowing.value = false }
+                    ),
+                    negativeAction = NegativeAction(
+                        negativeBtnTxt = "Cancel",
+                        onNegativeAction = { isShowing.value = false }
+                    )
                 )
-
             }
         }
 
