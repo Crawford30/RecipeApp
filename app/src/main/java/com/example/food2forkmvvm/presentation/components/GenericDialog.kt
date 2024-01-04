@@ -84,9 +84,11 @@ private constructor(builder: GenericDialogInfo.Builder) {
     val negativeAction: NegativeAction?
 
     init {
+        //Throe exception if title is null
         if (builder.title == null) {
             throw Exception("GenericDialog title cannot be null.")
         }
+        //Throe exception if onDismiss is null
         if (builder.onDismiss == null) {
             throw Exception("GenericDialog onDismiss function cannot be null.")
         }
@@ -149,6 +151,6 @@ private constructor(builder: GenericDialogInfo.Builder) {
         }
 
         //The function that constructs the Generic builder objects
-        fun build() = GenericDialogInfo(this)
+        fun build() = GenericDialogInfo(this) //The set is use to make the set private but the getter or get will be public
     }
 }
