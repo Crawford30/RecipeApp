@@ -25,12 +25,14 @@ import com.example.food2forkmvvm.presentation.ui.recipe.RecipeDetailScreen
 import com.example.food2forkmvvm.presentation.ui.recipe.RecipeDetailViewModel
 import com.example.food2forkmvvm.presentation.ui.recipe_list.RecipeListScreen
 import com.example.food2forkmvvm.presentation.ui.recipe_list.RecipeListViewModel
+import com.example.food2forkmvvm.presentation.util.ConnectivityManagerLiveData
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
 
 /**
@@ -39,55 +41,21 @@ import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    val TAG = "c-Manager"
-    lateinit var cm: ConnectivityManager
 
-    val networkRequest = NetworkRequest.Builder()
-        .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-        .build()
+    @Inject
+    lateinit var connectivityManagerLiveData: ConnectivityManagerLiveData
 
-    val networkCallback = object : ConnectivityManager.NetworkCallback() {
-        override fun onAvailable(network: Network) {
-            //Only calls when you connect to internet
-            val networkCapabilities = cm.getNetworkCapabilities(network)
-            val hasInternetCapability = networkCapabilities?.hasCapability(NET_CAPABILITY_INTERNET)
-
-            if (hasInternetCapability == true) {
-
-                CoroutineScope(IO).launch { //Launch in background thread
-
-                    val hasInternet = DoesNetworkHaveInternet.execute()
-
-                    //if it has internet, we switch to the main thread
-                    withContext(Main) {
-                        Log.d(TAG, "It has internet: ${network}")
-                    }
-
-                }
-
-            }
-            super.onAvailable(network)
-            Log.d(TAG, "onAvail: ${network}")
-        }
-
-        override fun onLost(network: Network) {
-            //Its called when you disconnect from intert
-            super.onLost(network)
-            Log.d(TAG, "onLost: ${network}")
-        }
-
-
-    }
 
     override fun onStart() {
         super.onStart()
-        cm = this.getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
-        cm.registerNetworkCallback(networkRequest, networkCallback)
+        connectivityManagerLiveData.registerConnectionObserver(this)
+
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        cm.unregisterNetworkCallback(networkCallback)
+        connectivityManagerLiveData.unregisterConnectionObserver(this)
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
