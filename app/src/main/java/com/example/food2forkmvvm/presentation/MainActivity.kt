@@ -1,9 +1,15 @@
 package com.example.food2forkmvvm.presentation
 
+import android.net.ConnectivityManager
+import android.net.Network
+import android.net.NetworkCapabilities
+import android.net.NetworkRequest
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.getSystemService
 import androidx.hilt.navigation.HiltViewModelFactory
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -26,6 +32,40 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    val TAG = "c-Manager"
+    lateinit var cm: ConnectivityManager
+
+    val networkRequest = NetworkRequest.Builder()
+        .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+        .build()
+
+    val networkCallback = object : ConnectivityManager.NetworkCallback() {
+        override fun onAvailable(network: Network) {
+            //Only calls when you connect to internet
+            super.onAvailable(network)
+            Log.d(TAG, "onAvail: ${network}")
+        }
+
+        override fun onLost(network: Network) {
+            //Its called when you disconnect from intert
+            super.onLost(network)
+            Log.d(TAG, "onLost: ${network}")
+        }
+
+
+    }
+
+    override fun onStart() {
+        super.onStart()
+        cm = this.getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
+        cm.registerNetworkCallback(networkRequest, networkCallback)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        cm.unregisterNetworkCallback(networkCallback)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
