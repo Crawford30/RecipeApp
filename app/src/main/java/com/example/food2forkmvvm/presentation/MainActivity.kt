@@ -3,6 +3,7 @@ package com.example.food2forkmvvm.presentation
 import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
+import android.net.NetworkCapabilities.NET_CAPABILITY_INTERNET
 import android.net.NetworkRequest
 import android.os.Bundle
 import android.util.Log
@@ -18,12 +19,18 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.food2forkmvvm.interactors.app.DoesNetworkHaveInternet
 import com.example.food2forkmvvm.presentation.navigation.Screen
 import com.example.food2forkmvvm.presentation.ui.recipe.RecipeDetailScreen
 import com.example.food2forkmvvm.presentation.ui.recipe.RecipeDetailViewModel
 import com.example.food2forkmvvm.presentation.ui.recipe_list.RecipeListScreen
 import com.example.food2forkmvvm.presentation.ui.recipe_list.RecipeListViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 /**
@@ -42,6 +49,23 @@ class MainActivity : ComponentActivity() {
     val networkCallback = object : ConnectivityManager.NetworkCallback() {
         override fun onAvailable(network: Network) {
             //Only calls when you connect to internet
+            val networkCapabilities = cm.getNetworkCapabilities(network)
+            val hasInternetCapability = networkCapabilities?.hasCapability(NET_CAPABILITY_INTERNET)
+
+            if (hasInternetCapability == true) {
+
+                CoroutineScope(IO).launch { //Launch in background thread
+
+                    val hasInternet = DoesNetworkHaveInternet.execute()
+
+                    //if it has internet, we switch to the main thread
+                    withContext(Main) {
+                        Log.d(TAG, "It has internet: ${network}")
+                    }
+
+                }
+
+            }
             super.onAvailable(network)
             Log.d(TAG, "onAvail: ${network}")
         }
