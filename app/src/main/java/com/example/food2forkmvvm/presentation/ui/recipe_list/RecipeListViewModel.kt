@@ -210,9 +210,11 @@ constructor(
 
             //error
             dataState.error?.let { error ->
-                Log.d(TAG, "newSearch: ${error}")
-                dialogQueue.appendErrorMessage("Error", error)
+                dialogQueue.appendErrorMessage("An Error Occurred", error)
+//                dialogQueue.appendErrorMessage("Another Error", error)
+//                dialogQueue.appendErrorMessage("New Error", error)
             }
+
 
         }.launchIn(viewModelScope) //This scope will live as long ad the VM is alive
 

@@ -17,12 +17,17 @@ class DialogQueue {
 
     fun removeHeadMessage() {
         if (queue.value.isNotEmpty()) {
-            val update = queue.value
+
+            val update = LinkedList(queue.value)
             update.remove() // remove first (oldest message)
-            queue.value =
-                LinkedList() //initialise an new linkedlist to force recompose when the queue is updated
-            //ArrayDeque() // force recompose (bug?)
             queue.value = update
+
+//            val update = queue.value
+//            update.remove() // remove first (oldest message)
+//            queue.value = LinkedList(update)
+////            queue.value = LinkedList() //initialise an new linkedlist to force recompose when the queue is updated
+//            //ArrayDeque() // force recompose (bug?)
+//            queue.value = update
         }
     }
 
@@ -32,11 +37,11 @@ class DialogQueue {
             GenericDialogInfo.Builder()
                 .title(title)
                 .onDismiss(this::removeHeadMessage) //when we click ok, we want to remove the message on the head
-                .description(description)
+                .description("description")
                 .positive(
                     PositiveAction(
                         positiveBtnTxt = "Ok",
-                        onPositiveAction = this::removeHeadMessage,
+                        onPositiveAction = this::removeHeadMessage,//when we click ok, we want to remove the message on the head
                     )
                 )
                 .build()

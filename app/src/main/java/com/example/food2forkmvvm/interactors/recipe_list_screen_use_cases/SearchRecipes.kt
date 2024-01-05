@@ -33,6 +33,12 @@ class SearchRecipes(
 
             delay(1000) //to show pagination/progress bar because api is very fast
 
+
+            // force error for testing
+            if (query == "error") {
+                throw Exception("Search FAILED!")
+            }
+
 //            val recipe = recipeService.search(
 //                token = token,
 //                query = query,
