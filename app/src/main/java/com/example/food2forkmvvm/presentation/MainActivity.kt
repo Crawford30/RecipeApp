@@ -65,8 +65,7 @@ class MainActivity : ComponentActivity() {
             //Get access to nav graph
             val navController = rememberNavController()
 
-            val isInternetAvailable = connectivityManagerLiveData.isNetworkAvailable.value
-            Log.d(TAG, "onCreate: IS INTERNET AVAILABLE? ${isInternetAvailable}")
+            Log.d(TAG, "onCreate: IS INTERNET AVAILABLE? ${ connectivityManagerLiveData.isNetworkAvailable.value}")
 
             NavHost(navController = navController, startDestination = Screen.RecipeList.route) {
 
@@ -125,7 +124,6 @@ class MainActivity : ComponentActivity() {
                         isNetworkAvailable = connectivityManagerLiveData.isNetworkAvailable.value,
                         recipeId = navBackStackEntry.arguments?.getInt("recipeId"),
                         viewModel = viewModel
-
                     )
 
 
