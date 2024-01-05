@@ -11,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.example.food2forkmvvm.presentation.ConnectivityMonitor
 import com.example.food2forkmvvm.presentation.components.*
 import com.example.food2forkmvvm.presentation.ui.recipe_list.util.DialogQueue
 import java.util.Queue
@@ -53,6 +54,7 @@ private val DarkThemeColors = darkColors(
 @Composable
 fun AppTheme(
     darkTheme: Boolean,
+    isNetworkAvailable: Boolean,
     displayProgressBar: Boolean,
     scaffoldState: ScaffoldState,
     dialogQueue: Queue<GenericDialogInfo>? = null,
@@ -80,7 +82,11 @@ fun AppTheme(
                 .fillMaxSize()
                 .background(color = if (!darkTheme) Grey1 else Color.Black)
         ) {
-            content()
+            Column() {
+                ConnectivityMonitor(isConnectionAvailable = isNetworkAvailable)
+                content()
+
+            }
             CircularIndeterminateProgressBar(isDisplayed = displayProgressBar, 0.3f)
             DefaultSnackbar(
                 snackbarHostState = scaffoldState.snackbarHostState,

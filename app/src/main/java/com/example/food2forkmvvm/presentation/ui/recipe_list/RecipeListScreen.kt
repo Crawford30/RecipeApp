@@ -16,6 +16,7 @@ import com.example.food2forkmvvm.util.Constants.TAG
 @Composable
 fun RecipeListScreen(
     isDarkTheme: Boolean,
+    isNetworkAvailable: Boolean,
     onToggleTheme: () -> Unit,
     onNavigateToRecipeDetailScreen: (String) -> Unit,
     viewModel: RecipeListViewModel
@@ -45,6 +46,7 @@ fun RecipeListScreen(
 
     AppTheme(
         darkTheme = isDarkTheme,
+        isNetworkAvailable = isNetworkAvailable,
         displayProgressBar = isLoading,
         scaffoldState = scaffoldState,
         dialogQueue = dialogQueue.queue.value

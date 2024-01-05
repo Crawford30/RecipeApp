@@ -26,6 +26,7 @@ import com.example.food2forkmvvm.presentation.ui.recipe.RecipeDetailViewModel
 import com.example.food2forkmvvm.presentation.ui.recipe_list.RecipeListScreen
 import com.example.food2forkmvvm.presentation.ui.recipe_list.RecipeListViewModel
 import com.example.food2forkmvvm.presentation.util.ConnectivityManagerLiveData
+import com.example.food2forkmvvm.util.Constants.TAG
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
@@ -64,6 +65,9 @@ class MainActivity : ComponentActivity() {
             //Get access to nav graph
             val navController = rememberNavController()
 
+            val isInternetAvailable = connectivityManagerLiveData.isNetworkAvailable.value
+            Log.d(TAG, "onCreate: IS INTERNET AVAILABLE? ${isInternetAvailable}")
+
             NavHost(navController = navController, startDestination = Screen.RecipeList.route) {
 
                 //We need destination for our nav graph
@@ -80,6 +84,7 @@ class MainActivity : ComponentActivity() {
 
                     RecipeListScreen(
                         isDarkTheme = (application as BaseApplication).isDarkTheme.value,
+                        isNetworkAvailable = connectivityManagerLiveData.isNetworkAvailable.value,
                         onToggleTheme = { (application as BaseApplication)::toggleTheme },
 //                        onNavigateToRecipeDetailScreen = {
 //                            navController.navigate(it)
@@ -117,8 +122,10 @@ class MainActivity : ComponentActivity() {
 
                     RecipeDetailScreen(
                         isDarkTheme = (application as BaseApplication).isDarkTheme.value,
+                        isNetworkAvailable = connectivityManagerLiveData.isNetworkAvailable.value,
                         recipeId = navBackStackEntry.arguments?.getInt("recipeId"),
                         viewModel = viewModel
+
                     )
 
 

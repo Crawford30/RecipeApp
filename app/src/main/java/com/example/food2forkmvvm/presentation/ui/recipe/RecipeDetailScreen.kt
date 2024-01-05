@@ -19,6 +19,7 @@ import com.example.mvvmrecipeapp.presentation.components.RecipeView
 @Composable
 fun RecipeDetailScreen(
     isDarkTheme: Boolean,
+    isNetworkAvailable: Boolean,
     recipeId: Int?,
     viewModel: RecipeDetailViewModel,
 ) {
@@ -50,6 +51,7 @@ fun RecipeDetailScreen(
             displayProgressBar = loading,
             scaffoldState = scaffoldState,
             darkTheme = isDarkTheme,
+            isNetworkAvailable = isNetworkAvailable,
             dialogQueue = dialogQueue.queue.value,
         ) {
             Scaffold(
