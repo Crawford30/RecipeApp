@@ -19,6 +19,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.food2forkmvvm.dataStore.SettingsDataStore
 import com.example.food2forkmvvm.interactors.app.DoesNetworkHaveInternet
 import com.example.food2forkmvvm.presentation.navigation.Screen
 import com.example.food2forkmvvm.presentation.ui.recipe.RecipeDetailScreen
@@ -46,6 +47,9 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var connectivityManagerLiveData: ConnectivityManagerLiveData
 
+    @Inject
+    lateinit var settingsDataSore: SettingsDataStore
+
 
     override fun onStart() {
         super.onStart()
@@ -65,7 +69,10 @@ class MainActivity : ComponentActivity() {
             //Get access to nav graph
             val navController = rememberNavController()
 
-            Log.d(TAG, "onCreate: IS INTERNET AVAILABLE? ${ connectivityManagerLiveData.isNetworkAvailable.value}")
+            Log.d(
+                TAG,
+                "onCreate: IS INTERNET AVAILABLE? ${connectivityManagerLiveData.isNetworkAvailable.value}"
+            )
 
             NavHost(navController = navController, startDestination = Screen.RecipeList.route) {
 
@@ -82,9 +89,9 @@ class MainActivity : ComponentActivity() {
                         viewModel(viewModelStoreOwner, "RecipeListViewModel", hiltViewModelFactory)
 
                     RecipeListScreen(
-                        isDarkTheme = (application as BaseApplication).isDarkTheme.value,
+                        isDarkTheme = settingsDataSore.isDarkTheme.value,
                         isNetworkAvailable = connectivityManagerLiveData.isNetworkAvailable.value,
-                        onToggleTheme = { (application as BaseApplication)::toggleTheme },
+                        onToggleTheme = { settingsDataSore::toggleTheme },
 //                        onNavigateToRecipeDetailScreen = {
 //                            navController.navigate(it)
 //                        },
@@ -120,7 +127,7 @@ class MainActivity : ComponentActivity() {
                         )
 
                     RecipeDetailScreen(
-                        isDarkTheme = (application as BaseApplication).isDarkTheme.value,
+                        isDarkTheme = settingsDataSore.isDarkTheme.value,
                         isNetworkAvailable = connectivityManagerLiveData.isNetworkAvailable.value,
                         recipeId = navBackStackEntry.arguments?.getInt("recipeId"),
                         viewModel = viewModel

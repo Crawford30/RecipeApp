@@ -9,14 +9,18 @@ import dagger.hilt.android.HiltAndroidApp
  * Its done by Hilt
  */
 @HiltAndroidApp
-class BaseApplication : Application(){
-    /**
-     * To keep track of dark and light theme
-     * Should be saved in Data store or cache
-     */
-    val isDarkTheme = mutableStateOf(false)
+class BaseApplication : Application()
 
-    fun toggleTheme(){
-        isDarkTheme.value = !isDarkTheme.value
-    }
-}
+//{
+//
+//    //Not needed now
+//    /**
+//     * To keep track of dark and light theme
+//     * Should be saved in Data store or cache
+//     */
+//    val isDarkTheme = mutableStateOf(false)
+//
+//    fun toggleTheme(){
+//        isDarkTheme.value = !isDarkTheme.value
+//    }
+//}

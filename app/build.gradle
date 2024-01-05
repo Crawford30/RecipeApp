@@ -127,6 +127,10 @@ dependencies {
     //Material Icons
     implementation "androidx.compose.material:material-icons-extended"
 
+    //Datastore for persisting Data
+    def data_store = "1.0.0"
+    implementation "androidx.datastore:datastore-preferences:$data_store"
+
     //Compose Runtime Animation
 //    implementation "androidx.compose.animation:animation-runtime:1.0.0"
 //    implementation 'androidx.compose.animation:animation:1.5.4'
