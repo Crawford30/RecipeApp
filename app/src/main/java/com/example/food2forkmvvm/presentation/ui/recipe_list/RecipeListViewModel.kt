@@ -10,6 +10,7 @@ import com.example.food2forkmvvm.domain.model.Recipe
 import com.example.food2forkmvvm.interactors.recipe_list_screen_use_cases.RestoreRecipes
 import com.example.food2forkmvvm.interactors.recipe_list_screen_use_cases.SearchRecipes
 import com.example.food2forkmvvm.presentation.ui.recipe_list.util.DialogQueue
+import com.example.food2forkmvvm.presentation.util.ConnectivityManagerLiveData
 import com.example.food2forkmvvm.repository.RecipeRepository
 import com.example.food2forkmvvm.util.Constants.TAG
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -36,9 +37,11 @@ class RecipeListViewModel
 constructor(
     private val searchRecipe: SearchRecipes,
     private val restoreRecipes: RestoreRecipes,
+    private val connectivityManagerLiveData: ConnectivityManagerLiveData,
 //    private val repository: RecipeRepository, //we delete the respository now
     private @Named("auth_token") val token: String,
     private val savedStateHandle: SavedStateHandle,
+
 ) : ViewModel() {
 
     /**
@@ -197,7 +200,8 @@ constructor(
         searchRecipe.execute(
             token = token,
             page = page.value,
-            query = query.value
+            query = query.value,
+            connectivityManagerLiveData.isNetworkAvailable.value
         ).onEach { dataState ->
 
             //loading state
@@ -210,10 +214,11 @@ constructor(
 
             //error
             dataState.error?.let { error ->
-                dialogQueue.appendErrorMessage("An Error Occurred", error)
+//                dialogQueue.appendErrorMessage("An Error Occurred", error)
 //                dialogQueue.appendErrorMessage("Another Error", error)
-//                dialogQueue.appendErrorMessage("New Error", error)
+//                dialogQueue.appendErrorMessage("New We", error)
             }
+
 
 
         }.launchIn(viewModelScope) //This scope will live as long ad the VM is alive
@@ -245,7 +250,8 @@ constructor(
                 searchRecipe.execute(
                     token = token,
                     page = page.value,
-                    query = query.value
+                    query = query.value,
+                    connectivityManagerLiveData.isNetworkAvailable.value
                 ).onEach { dataState ->
 
                     //loading state

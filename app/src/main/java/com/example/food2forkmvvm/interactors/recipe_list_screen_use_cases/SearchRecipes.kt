@@ -24,7 +24,8 @@ class SearchRecipes(
     fun execute(
         token: String,
         page: Int,
-        query: String
+        query: String,
+        isNetworkAvailable: Boolean,
     ): Flow<DataState<List<Recipe>>> = flow {
         //To handle any error, we use try and catch
         try {
@@ -55,37 +56,44 @@ class SearchRecipes(
 
 
             //TODO("Check if there is an internet connection")
-            val recipe = getRecipesFromNetwork(
-                token = token,
-                query = query,
-                page = page
-            )
-
-            //Insert Into the cache
-            recipeDao.insertRecipes(
-                entityMapper.toEntityList(recipe)
-            )
-
-            //Query the cache and emit to the UI
-            val cachedResults = if (query.isBlank()) {
-                recipeDao.getAllRecipes(
-                    pageSize = RECIPE_PAGINATION_PAGE_SIZE,
-                    page = page
-
-                )
-            } else {
-                recipeDao.searchRecipes(
+            if (isNetworkAvailable) {
+                //Hit the network and insert them into the cache
+                val recipe = getRecipesFromNetwork(
+                    token = token,
                     query = query,
-                    pageSize = RECIPE_PAGINATION_PAGE_SIZE,
                     page = page
                 )
+
+                //Insert Into the cache
+                recipeDao.insertRecipes(
+                    entityMapper.toEntityList(recipe)
+                )
+            }
+            //Else it gets the result from the cache and emits to the UI
+            else {
+
+
+                //Query the cache and emit to the UI
+                val cachedResults = if (query.isBlank()) {
+                    recipeDao.getAllRecipes(
+                        pageSize = RECIPE_PAGINATION_PAGE_SIZE,
+                        page = page
+
+                    )
+                } else {
+                    recipeDao.searchRecipes(
+                        query = query,
+                        pageSize = RECIPE_PAGINATION_PAGE_SIZE,
+                        page = page
+                    )
+
+                }
+                //Emit the cache to the viewmodel, ie emit a list of recipe from the cache to the VM
+                val list = entityMapper.fromEntityList(cachedResults)
+
+                emit(DataState.success(list))
 
             }
-
-            //Emit the cache to the viewmodel, ie emit a list of recipe from the cache to the VM
-            val list = entityMapper.fromEntityList(cachedResults)
-
-            emit(DataState.success(list))
 
 
         } catch (e: Exception) {

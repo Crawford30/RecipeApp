@@ -27,6 +27,7 @@ class GetRecipe(
     fun execute(
         recipeId: Int,
         token: String,
+        isNetworkAvailable: Boolean
     ): Flow<DataState<Recipe>> = flow {
         //To handle any error, we use try and catch
         try {
@@ -42,14 +43,20 @@ class GetRecipe(
             if (recipe != null) {
                 emit(DataState.success(recipe))
             } else {
-                //if null, get from the network, emit to the cache
-                val networkRecipe = getRecipeFromNetwork(token, recipeId)
 
-                //Insert to the cache
-                recipeDao.insertRecipe(
-                    entityMapper.mapFromDomainModel(networkRecipe)
-                )
+                //If network avaliable, get recipe from the network and insert to the cache
+                if (isNetworkAvailable) {
+                    //if null, get from the network, emit to the cache
+                    val networkRecipe = getRecipeFromNetwork(token, recipeId)
 
+                    //Insert to the cache
+                    recipeDao.insertRecipe(
+                        entityMapper.mapFromDomainModel(networkRecipe)
+                    )
+
+                }
+
+                //=======Else Get from the Cache==========
                 //retrieve from the cache and emit it
                 recipe = getRecipeFromCache(recipeId)
 

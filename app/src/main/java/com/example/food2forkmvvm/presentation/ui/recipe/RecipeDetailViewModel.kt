@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.food2forkmvvm.domain.model.Recipe
 import com.example.food2forkmvvm.interactors.recipe_screen_use_cases.GetRecipe
 import com.example.food2forkmvvm.presentation.ui.recipe_list.util.DialogQueue
+import com.example.food2forkmvvm.presentation.util.ConnectivityManagerLiveData
 import com.example.food2forkmvvm.repository.RecipeRepository
 import com.example.food2forkmvvm.util.Constants.TAG
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,6 +28,7 @@ class RecipeDetailViewModel
 @Inject
 constructor(
     private val getRecipe: GetRecipe,
+    private val connectivityManagerLiveData: ConnectivityManagerLiveData,
 //    private val recipeRepository: RecipeRepository, //we dont need the repository since we're using usecases
     private @Named("auth_token") val token: String,
     private val state: SavedStateHandle,
@@ -68,13 +70,13 @@ constructor(
     private fun getRecipe(id: Int) {
         getRecipe.execute(
             recipeId = id,
-            token = token
+            token = token,
+            connectivityManagerLiveData.isNetworkAvailable.value
         ).onEach { dataState ->
             loading.value = dataState.loading
             dataState.data?.let { data ->
                 recipe.value = data
                 state.set(STATE_KEY_RECIPE, data.id)
-
             }
 
             dataState.error?.let { error ->
