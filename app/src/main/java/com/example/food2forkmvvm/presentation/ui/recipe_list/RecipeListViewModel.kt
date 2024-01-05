@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.food2forkmvvm.domain.model.Recipe
 import com.example.food2forkmvvm.interactors.recipe_list_screen_use_cases.RestoreRecipes
 import com.example.food2forkmvvm.interactors.recipe_list_screen_use_cases.SearchRecipes
+import com.example.food2forkmvvm.presentation.ui.recipe_list.util.DialogQueue
 import com.example.food2forkmvvm.repository.RecipeRepository
 import com.example.food2forkmvvm.util.Constants.TAG
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -79,6 +80,10 @@ constructor(
 
     val page = mutableStateOf(1)
     private var recipeListScrollPosition = 0
+
+    //Dialog Queue
+    val dialogQueue = DialogQueue()
+
 
     /**
      * Get the data
@@ -166,7 +171,7 @@ constructor(
             //error
             dataState.error?.let { error ->
                 Log.d(TAG, "restoreState: ${error}")
-//                TODO("handle the error")
+                dialogQueue.appendErrorMessage("Error", error)
             }
 
         }.launchIn(viewModelScope) //This scope will live as long ad the VM is alive
@@ -206,7 +211,7 @@ constructor(
             //error
             dataState.error?.let { error ->
                 Log.d(TAG, "newSearch: ${error}")
-//                TODO("handle the error")
+                dialogQueue.appendErrorMessage("Error", error)
             }
 
         }.launchIn(viewModelScope) //This scope will live as long ad the VM is alive
@@ -252,7 +257,7 @@ constructor(
                     //error
                     dataState.error?.let { error ->
                         Log.d(TAG, "nextPage: ${error}")
-//                        TODO("handle the error")
+                        dialogQueue.appendErrorMessage("Error", error)
                     }
 
                 }.launchIn(viewModelScope) //This scope will live as long ad the VM is alive

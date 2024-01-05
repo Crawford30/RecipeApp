@@ -40,11 +40,14 @@ fun RecipeListScreen(
 
     val scaffoldState = rememberScaffoldState()
 
+    val dialogQueue = viewModel.dialogQueue
+
 
     AppTheme(
         darkTheme = isDarkTheme,
         displayProgressBar = isLoading,
-        scaffoldState = scaffoldState
+        scaffoldState = scaffoldState,
+        dialogQueue = dialogQueue.queue.value
     ) {
 
         /**
@@ -108,12 +111,11 @@ fun RecipeListScreen(
             RecipeList(
                 loading = isLoading,
                 recipes = recipes,
-                onChangeScrollPosition = viewModel::onChangeRecipeScrollPosition ,
-                page = page ,
-                onTriggerNextPage = { viewModel.onTriggerEvent(RecipeListEvent.NextPageEvent)  },
-                onNavigateToRecipeDetailScreen =  onNavigateToRecipeDetailScreen
+                onChangeScrollPosition = viewModel::onChangeRecipeScrollPosition,
+                page = page,
+                onTriggerNextPage = { viewModel.onTriggerEvent(RecipeListEvent.NextPageEvent) },
+                onNavigateToRecipeDetailScreen = onNavigateToRecipeDetailScreen
             )
-
 
 
         }

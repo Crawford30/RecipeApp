@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.food2forkmvvm.domain.model.Recipe
 import com.example.food2forkmvvm.interactors.recipe_screen_use_cases.GetRecipe
+import com.example.food2forkmvvm.presentation.ui.recipe_list.util.DialogQueue
 import com.example.food2forkmvvm.repository.RecipeRepository
 import com.example.food2forkmvvm.util.Constants.TAG
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -36,6 +37,9 @@ constructor(
     val loading = mutableStateOf(false)
 
     val onLoad: MutableState<Boolean> = mutableStateOf(false)
+
+    //Dialog Queue
+    val dialogQueue = DialogQueue()
 
 //    init {
 //        // restore if the process dies
@@ -75,6 +79,7 @@ constructor(
 
             dataState.error?.let { error ->
                 Log.d(TAG, "getRicepe: ${error}")
+                dialogQueue.appendErrorMessage("Error", error)
             }
 
         }.launchIn(viewModelScope)

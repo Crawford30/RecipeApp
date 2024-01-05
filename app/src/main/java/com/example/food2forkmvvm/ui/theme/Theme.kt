@@ -12,6 +12,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.food2forkmvvm.presentation.components.*
+import com.example.food2forkmvvm.presentation.ui.recipe_list.util.DialogQueue
+import java.util.Queue
 
 /*
 Light Colors
@@ -53,7 +55,9 @@ fun AppTheme(
     darkTheme: Boolean,
     displayProgressBar: Boolean,
     scaffoldState: ScaffoldState,
+    dialogQueue: Queue<GenericDialogInfo>? = null,
     content: @Composable () -> Unit,
+
 
 //    darkTheme: Boolean = isSystemInDarkTheme(),
 //    displayProgressBar: Boolean,
@@ -86,51 +90,53 @@ fun AppTheme(
                 modifier = Modifier.align(Alignment.BottomCenter)
             )
 
+            ProcessDialogQueue(dialogQueue = dialogQueue) //this replaces
 
-            val isShowing = remember { mutableStateOf(true) }
-            if (isShowing.value) {
-                val dialogInfo = GenericDialogInfo.Builder()
-                    .title("Error")
-                    .onDismiss{isShowing.value = false}
-                    .description("Hey look a dialog description")
-                    .positive(
-                        positiveAction = PositiveAction(
-                            positiveBtnTxt = "OK",
-                            onPositiveAction = {isShowing.value = false }
-                        )
-                    )
-                    .negative(
-                        negativeAction = NegativeAction(
-                            negativeBtnTxt = "Cancel",
-                            onNegativeAction = {isShowing.value = false }
-                        )
-                    )
-                    .build()
-
-
-                GenericDialog(
-                    onDismiss = dialogInfo.onDismiss,
-                    title = dialogInfo.title,
-                    description = dialogInfo.description,
-                    positiveAction = dialogInfo.positiveAction,
-                    negativeAction = dialogInfo.negativeAction
-                )
-
-
-//                GenericDialog(
-//                    onDismiss = { isShowing.value = false },
-//                    title = "Error",
-//                    description = "Hey look a dialog description",
-//                    positiveAction = PositiveAction(
-//                        positiveBtnTxt = "OK",
-//                        onPositiveAction = { isShowing.value = false }
-//                    ),
-//                    negativeAction = NegativeAction(
-//                        negativeBtnTxt = "Cancel",
-//                        onNegativeAction = { isShowing.value = false }
+//
+//            val isShowing = remember { mutableStateOf(true) }
+//            if (isShowing.value) {
+//                val dialogInfo = GenericDialogInfo.Builder()
+//                    .title("Error")
+//                    .onDismiss { isShowing.value = false }
+//                    .description("Hey look a dialog description")
+//                    .positive(
+//                        positiveAction = PositiveAction(
+//                            positiveBtnTxt = "OK",
+//                            onPositiveAction = { isShowing.value = false }
+//                        )
 //                    )
+//                    .negative(
+//                        negativeAction = NegativeAction(
+//                            negativeBtnTxt = "Cancel",
+//                            onNegativeAction = { isShowing.value = false }
+//                        )
+//                    )
+//                    .build()
+//
+//
+//                GenericDialog(
+//                    onDismiss = dialogInfo.onDismiss,
+//                    title = dialogInfo.title,
+//                    description = dialogInfo.description,
+//                    positiveAction = dialogInfo.positiveAction,
+//                    negativeAction = dialogInfo.negativeAction
 //                )
-            }
+//
+//
+////                GenericDialog(
+////                    onDismiss = { isShowing.value = false },
+////                    title = "Error",
+////                    description = "Hey look a dialog description",
+////                    positiveAction = PositiveAction(
+////                        positiveBtnTxt = "OK",
+////                        onPositiveAction = { isShowing.value = false }
+////                    ),
+////                    negativeAction = NegativeAction(
+////                        negativeBtnTxt = "Cancel",
+////                        onNegativeAction = { isShowing.value = false }
+////                    )
+////                )
+//            }
         }
 
     }
@@ -165,4 +171,20 @@ fun AppTheme(
 //        }
 //    }
 
+}
+
+
+@Composable
+fun ProcessDialogQueue(
+    dialogQueue: Queue<GenericDialogInfo>?,
+) {
+    dialogQueue?.peek()?.let { dialogInfo ->
+        GenericDialog(
+            onDismiss = { dialogInfo.onDismiss },
+            title = dialogInfo.title,
+            positiveAction = dialogInfo.positiveAction,
+            negativeAction = dialogInfo.negativeAction
+        )
+
+    }  //Look at the one in the top
 }
