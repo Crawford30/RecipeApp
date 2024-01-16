@@ -30,6 +30,11 @@ class GetRecipe(
         isNetworkAvailable: Boolean
     ): Flow<DataState<Recipe>> = flow {
         //To handle any error, we use try and catch
+
+        Log.d(
+            TAG,
+            "onCreate: IS INTERNET AVAILABLE?(USE CASE) ${isNetworkAvailable}"
+        )
         try {
             //we need to show loading
             emit(DataState.loading())

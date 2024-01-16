@@ -70,30 +70,26 @@ class SearchRecipes(
                 )
             }
             //Else it gets the result from the cache and emits to the UI
-            else {
 
+            //Query the cache and emit to the UI
+            val cachedResults = if (query.isBlank()) {
+                recipeDao.getAllRecipes(
+                    pageSize = RECIPE_PAGINATION_PAGE_SIZE,
+                    page = page
 
-                //Query the cache and emit to the UI
-                val cachedResults = if (query.isBlank()) {
-                    recipeDao.getAllRecipes(
-                        pageSize = RECIPE_PAGINATION_PAGE_SIZE,
-                        page = page
-
-                    )
-                } else {
-                    recipeDao.searchRecipes(
-                        query = query,
-                        pageSize = RECIPE_PAGINATION_PAGE_SIZE,
-                        page = page
-                    )
-
-                }
-                //Emit the cache to the viewmodel, ie emit a list of recipe from the cache to the VM
-                val list = entityMapper.fromEntityList(cachedResults)
-
-                emit(DataState.success(list))
+                )
+            } else {
+                recipeDao.searchRecipes(
+                    query = query,
+                    pageSize = RECIPE_PAGINATION_PAGE_SIZE,
+                    page = page
+                )
 
             }
+            //Emit the cache to the viewmodel, ie emit a list of recipe from the cache to the VM
+            val list = entityMapper.fromEntityList(cachedResults)
+
+            emit(DataState.success(list))
 
 
         } catch (e: Exception) {

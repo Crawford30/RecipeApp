@@ -44,6 +44,8 @@ constructor(
 
 ) : ViewModel() {
 
+
+
     /**
      * Create mutable live data to watch  changes and pass data to the UI
      *
@@ -57,6 +59,7 @@ constructor(
      */
 
     val recipes: MutableState<List<Recipe>> = mutableStateOf(ArrayList())
+
 
 //    /**
 //     * For UI to see it, we create another variable(Its a readonly value)
@@ -93,6 +96,10 @@ constructor(
      */
     init {
 
+        Log.d(
+            TAG,
+            "onCreate: IS INTERNET AVAILABLE?(VIEW MODEL) ${connectivityManagerLiveData.isNetworkAvailable.value}"
+        )
         //If the process die, the VM and if the process is restored, the state with restored
         //inside this init
         savedStateHandle.get<Int>(STATE_KEY_PAGE)?.let { p ->

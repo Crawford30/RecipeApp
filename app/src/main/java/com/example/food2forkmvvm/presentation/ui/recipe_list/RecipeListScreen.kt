@@ -24,6 +24,8 @@ fun RecipeListScreen(
 
     Log.d(TAG, "RECIPELISTSCREEN: ${viewModel}")
 
+    Log.d(TAG, "isNetworkAvailable(ViewModel): ${isNetworkAvailable}")
+
     val keyboardController = LocalFocusManager.current
     val scrollState = rememberScrollState()
     val coroutineScope = rememberCoroutineScope()

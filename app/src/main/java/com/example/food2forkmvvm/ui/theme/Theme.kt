@@ -85,7 +85,6 @@ fun AppTheme(
             Column() {
                 ConnectivityMonitor(isConnectionAvailable = isNetworkAvailable)
                 content()
-
             }
             CircularIndeterminateProgressBar(isDisplayed = displayProgressBar, 0.3f)
             DefaultSnackbar(
